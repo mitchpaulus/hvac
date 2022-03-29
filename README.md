@@ -10,3 +10,6 @@ Includes:
   EnergyPlus.
 
 - `SolAirTemperatureCalculations.xlsx`. Spreadsheet of sol-air temperature calculations for a building in College Station, TX.
+
+- `slr_test_data.txt`: Test data from [Wikipedia](https://en.wikipedia.org/wiki/Simple_linear_regression)
+  - Result: Slope: 61.272 Constant: -39.062
