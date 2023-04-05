@@ -1,0 +1,29 @@
+-- From ASHRAE
+C8 = -1.0440397 {R} * 10^4
+C9 = -1.129465 * 10^1
+C10 = -2.7022355 {1/R} * 10^(-2)
+C11 = 1.289036 {1/R^2} * 10^(-5)
+C12 = -2.4780681 {1/R^3} * 10^(-9)
+C13 = 6.5459673
+
+TF = 32 to 100 in {°F}
+TR = R: TF;
+
+pws = 1 {psi} * exp: C8 / TR + C9 + TR * C10 + TR * TR * C11 + TR * TR * TR * C12 + C13 * ln: TR / 1 {R};;
+
+pws_tetens {psi} = 0.61094 {kPa} * exp: (1{°C} * (17.625 {1/°C} * C:TF;)) / (243.04 {°C} + C:TF;);
+
+P = 14.629776 {psi}
+X = 0.621945
+w_sat = (X * pws) / (P - pws)
+
+C = 1061 {Btu/lbm}
+cp_air = 0.24 {Btu/lbm °F}
+cp_w = 0.444 {Btu/lbm °F}
+h_sat = cp_air * TF + w_sat * (C + cp_w * TF)
+
+dpws_dt = 1 {psi} * (3 * C12 * TR^2 + 2 * C11 * TR + C13 / TR - C8 / TR^2 + C10) * exp: C13 * ln: TR / 1 {R}; + C12 * TR^3 + C11 * TR^2 + C10 * TR + C8 / TR + C9;
+
+dw_dt = (X * P * dpws_dt) / (pws * pws - 2 * P * pws + P * P)
+
+dh_dt = cp_air + C * dw_dt + cp_w * (dw_dt * TF + w_sat)

@@ -1,0 +1,22 @@
+eqpws: pws = C1 * ((2*C)/( (B^2 - 4*A*C)^(1/2) -B))^4;
+eqa: A = X^2 + n1 * X + n2;
+eqb: B = n3 * X^2 + n4*X + n5;
+eqc: C = n6 * X^2 + n7*X + n8;
+eqx: X = n11 * T + n9 / (n11 * T - n10);
+
+/* sub: lratsubst([eqa, eqb, eqc, eqx], eqpws); */
+
+
+depends(pws, T);
+eqpws_old: log(pws) = C8 / T + C9 + C10 * T + C11 * T^2 + C12 * T^3 + C13*log(T);
+
+eqpws_old: solve(eqpws_old, pws);
+
+display2d: false;
+dpws_dT: diff(eqpws_old, T);
+
+wsat: pws / (P - pws);
+
+dwsat_dT: fullratsimp(diff(wsat, T));
+
+/* solved: solve(dpws_dT, 'diff(pws, T)); */
