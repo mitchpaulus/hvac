@@ -1,0 +1,10 @@
+
+eq_eff: Qc = eff * ma * (Tcwr*a + b - hai);
+
+eq_eb_cw: Qc = mw * cw * (Tcwr - Tcws);
+
+eq_eb_ch: Qc = Ec + Qchw;
+
+eq_elec: Ec = C0 + (Tcws - Tcwr) * C1 + (Tcws - Tcwr)^2 * C2;
+
+fullratsimp(solve([eq_eff, eq_eb_cw, eq_eb_ch, eq_elec], [Tcws, Tcwr, Qc, Ec]));
