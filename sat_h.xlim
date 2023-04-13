@@ -1,0 +1,45 @@
+T = R: TF;
+
+TF = 70 to 93 in {°F}
+
+n1=1167.0521452767
+n2=-724213.16703206
+n3=-17.073846940092
+n4=12020.824702470
+n5=-3232555.0322333
+n6=14.915108613530
+n7=-4823.2657361591
+n8=405113.40542057
+n9=-0.23855557567849
+n10=650.17534844798
+n11=0.55555555555556
+
+theta = n11 * (T/1 {R})  + n9 / (n11*(T/1 {R}) - n10)
+
+A = theta*theta + n1 * theta + n2
+B = n3 * theta*theta + n4 * theta + n5
+C = n6 * theta*theta + n7 * theta + n8
+
+Pws = 145.03774 {psi} * ((2*C) / (-B + sqrt:B*B - 4*A*C;))^4
+
+P = 14.696 {psi}
+
+w_s = 0.621945 * Pws / (P - Pws)
+
+h_sat = 0.24 {Btu/lbm °F} * TF + w_s * (1061 {Btu/lbm} + 0.444 {Btu/lbm °F} * TF)
+
+-- Regress T (X) vs h_sat (Y)
+sum_T = sum: T;
+sum_h_sat = sum: h_sat;
+n = size: T;
+sum_T2 = sum: T * T;
+sum_T_h_sat = sum: T * h_sat;
+
+slope = (n * sum_T_h_sat - sum_T * sum_h_sat) / (n * sum_T2 - sum_T * sum_T)
+constant = (sum_h_sat - slope * sum_T) / n
+
+h_pred = slope * T + constant
+
+diff = h_pred - h_sat
+
+percent_diff {%} = diff / h_sat
