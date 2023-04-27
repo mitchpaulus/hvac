@@ -1,0 +1,8 @@
+eq: p = pd * (C1 + C2 * PLR * C3 * PLR^2 + C4 * LR + C5 * LR^2 + C6 * PLR * LR);
+
+eq_lr: LR = (Tcwr - Tchws) / LR_d;
+
+eq_sub: fullratsimp(lratsubst(eq_lr, eq));
+
+depends(p, Tcwr);
+d: diff(eq_sub, Tcwr);
