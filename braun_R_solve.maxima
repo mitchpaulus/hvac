@@ -1,0 +1,10 @@
+
+eq_eff1: R * cpw * (Tcwr - Tcws) / h_pot;
+
+eq_ntu: ntu = C * R^m;
+eq_mstar: mstar = Cs/(R * cpw);
+eq_eff2: (1 - exp(-ntu * (1 - mstar))) / (1 - mstar * exp(-ntu * (1 - mstar)));
+
+eq_eff2: lratsubst([eq_ntu, eq_mstar], eq_eff2);
+
+solve(eq_eff1 - eq_eff2, R);

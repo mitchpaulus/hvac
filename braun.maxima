@@ -1,0 +1,15 @@
+eq_ntu: ntu = c * (mw / ma)^m;
+
+eq_mstar: mstar = (ma * Cs) / (mw * Cw);
+
+eq_eff: eff = (1 - exp(-ntu * (1 - mstar))) / (1 - mstar * exp(-ntu * (1 - mstar)));
+
+eq_q: q = eff * ma * (haswi - hai);
+
+sub_eq_q: fullratsimp(lratsubst([eq_eff, eq_mstar], eq_q));
+
+depends(q, ma);
+
+diff(sub_eq_q, ma);
+
+fullratsimp(solve(eq_eff, ntu));

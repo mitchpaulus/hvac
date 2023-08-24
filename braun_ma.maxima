@@ -1,0 +1,16 @@
+eq_ntu:  c * (R)^m - ntu;
+
+eq_mstar: (Cs) / (R * Cw) - mstar;
+
+eq_exp: exp(-ntu * (1 - mstar)) - e;
+
+eq_eff: (1 - e) / (1 - mstar * e) - eff;
+
+eq_q:  eff * ma * (haswi - hai) - q;
+
+display2d: false;
+/* sub_eq_q: fullratsimp(lratsubst([eq_eff, eq_mstar, eq_ntu], eq_q)); */
+
+/* solve(sub_eq_q, ma); */
+
+jacobian([eq_ntu, eq_mstar, eq_exp, eq_eff, eq_q], [ma, ntu, e, mstar, eff]);

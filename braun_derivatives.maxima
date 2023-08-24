@@ -1,0 +1,8 @@
+
+eq_eff1: (1 - exp(-ntu * (1-mstar))) / (1 - mstar * exp(-ntu * (1-mstar)));
+
+depends(ntu, R);
+depends(mstar, R);
+
+display2d: false;
+diff(eq_eff1, R);

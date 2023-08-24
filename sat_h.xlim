@@ -43,3 +43,5 @@ h_pred = slope * T + constant
 diff = h_pred - h_sat
 
 percent_diff {%} = diff / h_sat
+
+constant_F = constant + (459.67 {R} * slope)

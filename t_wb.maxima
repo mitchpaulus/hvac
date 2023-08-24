@@ -1,0 +1,12 @@
+
+display2d: false;
+linel: 1000;
+eq1: h + (w_s_wb - w) * h_w_wb = h_s_wb;
+
+eq2: h = cp_a * T_oa + w * (C + cp_v * T_oa);
+eq3: h_s_wb = cp_a * T_wb + w_s_wb * (C + cp_v * T_wb);
+eq4: h_w_wb = cp_w * (T_wb - T_0);
+
+eq5: lratsubst([eq2, eq3, eq4], eq1);
+
+eq6: fullratsimp(solve(eq5, w));
