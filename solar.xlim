@@ -1,0 +1,81 @@
+`cc.tsv`
+1 cloud_cover
+
+hour_num = 0 to 8759 by 1 in {h}
+
+n21st = [21, 52, 80, 111, 141, 172, 202, 233, 264, 294, 325, 355] {}
+
+n = hour_num / 24 {h} + 0.5
+
+lst = hour_num - 24 * floor: hour_num / 24;
+
+day_num = floor: hour_num / 24;
+
+-- n = 1 to 365
+
+tb_func: day_num {} = -0.10845* sin: (2*103993/33102/365) * day_num + 1.38536112143679; + 0.400741700904476
+td_func: day_num {} = 0.226077274516371 * sin: (2*103993/33102/365) * day_num + 1.52031875106822; + 2.3051954474187
+
+tb = tb_func: n;
+td = td_func: n;
+
+-- These are from the ASHRAE Handbook weather pages
+tb_mon = [0.309, 0.323, 0.358,  0.404,  0.445,  0.502,  0.524,  0.518,  0.430,  0.363,  0.325,  0.311]
+td_mon = [2.488, 2.430, 2.396,  2.285,  2.202,  2.083,  2.041,  2.039,  2.261,  2.453,  2.516,  2.519]
+
+Esc = 433.3 {BTU/h ft^2}
+
+Eo = Esc * (1 + 0.033 * cos: 360 {deg} * (n - 3) / 365;)
+
+lambda = 360 {deg} * (n - 1) / 365
+
+eot {min} = 2.2918 {min} * (0.0075 + 0.1868 * cos: lambda; -3.2077 * sin: lambda; - 1.4615 * cos: 2 * lambda; - 4.089 * sin: 2 * lambda;)
+
+declination {deg} = 23.45 {deg} * sin: 360 {deg} * ((284 + n) / 365);
+
+-- lst = 12 {h}
+
+long = -77.035 {deg}
+lat = 38.847 {deg}
+
+-- long = -84.43 {deg}
+-- lat = 33.64 {deg}
+
+lsm = -75 {deg}
+
+ast {h} = lst + eot + (long - lsm) / 15 {deg} * 1 {min}
+
+hour_angle = 15 {deg} * (ast - 12 {h}) / 1 {h}
+
+sinB = cos: lat; * cos: declination; * cos: hour_angle; + sin: lat; * sin: declination;
+
+beta {deg} = asin: sinB;
+
+m = if beta > 0 then 1 / (sin: beta; + 0.50572 * (6.07995  + (beta / 1 {deg}))^-1.6364) else 0
+
+ab = 1.454 - 0.406*tb - 0.268*td + 0.021*tb*td
+ad = 0.507 + 0.205 *tb - 0.080*td - 0.190*tb*td
+
+Eb = if beta > 0 then Eo * exp: -tb * m^ab; else 0 {BTU/h ft^2}
+Ed = if beta > 0 then Eo * exp: -td * m^ad; else 0 {BTU/h ft^2}
+
+A = 0.40981
+P = 18.67486
+b = -0.32987
+bias = A
+
+factor = A * cos: (2*103993/33102) / P * cloud_cover + b; + bias
+
+Eb_cloud = Eb * factor
+
+theta = 90 {deg} - beta
+
+Eb_horizontal = Eb_cloud * cos: theta;
+
+AI = Eb / Eo
+
+Rb = if beta < 0 then 0 else cos: theta; / sin: beta;
+
+Ed_horizontal = Ed * (AI * Rb + (1 - AI))
+
+E_horizontal = Eb_horizontal + Ed_horizontal

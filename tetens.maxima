@@ -1,0 +1,10 @@
+eq1: P = 0.61078 * exp((17.27 * T_c) / (T_c + 237.3));
+
+c2f: T_c = (T_f - 32) * 5/9;
+
+ lratsubst(c2f, eq1);
+
+eq_ip: P = 0.088586 * exp((1727*T_f - 55264)/ (100*T_f + 39514));
+
+depends(P, T_f);
+diff_ip: fullratsimp(diff(eq_ip, T_f));
