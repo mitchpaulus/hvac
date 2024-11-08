@@ -1,0 +1,7 @@
+eq1: Pdew = 0.61078 * exp( (21.875 * ((Tdew - 32) * 5 / 9) ) / ( ((Tdew - 32) * 5 / 9)  + 265.5) );
+eq2: Pdb = 0.61078 * exp( (21.875 * ((Tdb - 32) * 5 / 9) ) / ( ((Tdb - 32) * 5 / 9)  + 265.5) );
+eq3: RH = rhs(eq1) / rhs(eq2);
+/* Solve for Tdew */
+eq4: simplify(fullratsimp(solve(eq3, Tdew)));
+display2d: false;
+eq4;
